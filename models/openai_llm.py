@@ -29,7 +29,7 @@ class OpenAILLM(BaseLLM):
             ],
             model=self.model_name,
             max_tokens=150,
-            temperature=0.7
+            temperature=0
         )
         return response.choices[0].message.content
 

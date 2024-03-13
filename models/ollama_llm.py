@@ -21,7 +21,7 @@ class OllamaLLM(BaseLLM):
                 "content": text
             }],
             options={
-                'temperature': 0.7,
+                'temperature': 0,
             },
             stream=False
         )
