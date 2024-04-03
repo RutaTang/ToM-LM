@@ -17,6 +17,11 @@ class OpenAILLM(BaseLLM):
         dotenv.load_dotenv(dotenv.find_dotenv())
         # set model name
         self.model_name = model_name
+        self.max_tokens = 150
+
+    def reconfigure(self, config: dict):
+        self.max_tokens = config.get("max_tokens", 150)
+        self.model_name = config.get("model_name", "gpt-3.5-turbo")
 
     def complete(self, text: str) -> str:
         client = openai.Client(api_key=os.environ["OPENAI_KEY"])
@@ -28,7 +33,7 @@ class OpenAILLM(BaseLLM):
                 }
             ],
             model=self.model_name,
-            max_tokens=150,
+            max_tokens=self.max_tokens,
             temperature=0
         )
         return response.choices[0].message.content
