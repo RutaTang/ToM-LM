@@ -10,7 +10,6 @@ def execution_metrics(df: pd.DataFrame) -> pd.DataFrame:
     1. Execution rate: whether the predicted symbolic formulation can be executed or not
     2. Execution accuracy: predicted labels match truth labels
     3. AUC: Area under the ROC curve
-    4. F1 score: F1 score
     """
 
     # execution_rate
@@ -42,7 +41,8 @@ def plot_metrics(df: pd.DataFrame):
     ax.set_ylim(0, 1.2)
     plt.xticks(rotation=0)
     plt.title("Metrics")
-    plt.xlabel("Setups")
+    plt.xlabel("Approaches")
+    plt.ylabel("Metric Value")
     for bar in bars.patches:
         bars.annotate(format(bar.get_height(), '.2f'),
                       (bar.get_x() + bar.get_width() / 2,
@@ -65,13 +65,15 @@ def results_distribution(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def plot_results_distribution(df: pd.DataFrame):
+    df = df.rename(columns={1: 'True', 0: 'False', -1: 'No Idea'})
     palette = lambda n: sns.color_palette('rocket', n)
     fig, ax = plt.subplots(figsize=(16, 5))
     bars = df.plot(use_index=True, y=list(df.columns), kind='bar', ax=ax, color=palette(len(df.columns)))
     ax.set_ylim(0, 1.2)
     plt.xticks(rotation=0)
     plt.title("Results Distribution")
-    plt.xlabel("Setups")
+    plt.xlabel("Approaches")
+    plt.ylabel("Percentage")
     for bar in bars.patches:
         bars.annotate(format(bar.get_height(), '.2f'),
                       (bar.get_x() + bar.get_width() / 2,
