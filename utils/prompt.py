@@ -8,18 +8,22 @@ def get_smcdel_prompt(example_context: str, example_hypothesis: str, example_sf:
     ------
     === Example Begin ===
     Natural Language Representation:
-    * Problem Context: {example_context}
-    * Hypothesis for validation: {example_hypothesis}
+    Context:
+    {example_context}
+    Hypothesis:
+    {example_hypothesis}
 
-    SMCDEL Symbolic Formulation:
+    Symbolic Formulation:
     {example_sf}
     === Example End ===
     ------
     Natural Language Representation:
-    * Problem Context: {problem_context}
-    * Hypothesis for validation: {problem_hypothesis}
+    Context:
+    {problem_context}
+    Hypothesis:
+    {problem_hypothesis}
 
-    SMCDEL Symbolic Formulation:
+    Symbolic Formulation:
     """
     r = textwrap.dedent(prompt_template)
     return r

@@ -1,0 +1,1 @@
+python main.py generate-data --test-samples --size 200

@@ -19,9 +19,12 @@ class OpenAILLM(BaseLLM):
         self.model_name = model_name
         self.max_tokens = 150
 
+    def get_name(self) -> str:
+        return self.model_name
+
     def reconfigure(self, config: dict):
         self.max_tokens = config.get("max_tokens", 150)
-        self.model_name = config.get("model_name", "gpt-3.5-turbo")
+        self.model_name = config.get("model_name", "gpt-3.5-turbo-0125")
 
     def complete(self, text: str) -> str:
         client = openai.Client(api_key=os.environ["OPENAI_KEY"])
@@ -42,7 +45,7 @@ class OpenAILLM(BaseLLM):
 class TestOpenAILLM(unittest.TestCase):
 
     def test_complete(self):
-        model = OpenAILLM("gpt-3.5-turbo")
+        model = OpenAILLM("gpt-3.5-turbo-0125")
         text = "What is the meaning of life?"
         response = model.complete(text)
         print(response)

@@ -6,10 +6,11 @@ import pandas
 from typing import TypedDict
 
 RESULT_DIR_NAME = "results"
-NL2SF_FILE_NAME = "nl2sf.pkl"
-SMCDEL_RESULT_FILE_NAME = "smcdel_result.pkl"
-DIRECT_RESULT_FILE_NAME = "direct_result.pkl"
-FINE_TUNING_DATA_FILE_NAME = "fine_tuning_data.jsonl"
+DATA_DIR_NAME = "data"
+NL2SF_FILE_NAME = "nl2sf"
+SMCDEL_RESULT_FILE_NAME = "smcdel_result"
+DIRECT_RESULT_FILE_NAME = "direct_result"
+FINE_TUNING_DATA_FILE_NAME = "fine_tuning_data"
 
 
 class NameInfo(TypedDict):
@@ -18,7 +19,6 @@ class NameInfo(TypedDict):
     """
     model_name: str
     sample_size: int
-    random_state: int
 
 
 def get_result_dir_path() -> str:
@@ -27,9 +27,15 @@ def get_result_dir_path() -> str:
     return path
 
 
+def get_data_dir_path() -> str:
+    path = os.path.join(os.getcwd(), DATA_DIR_NAME)
+    os.makedirs(path, exist_ok=True)
+    return path
+
+
 def _get_result_file_path(name_info: NameInfo, file_name: str) -> str:
     path = get_result_dir_path()
-    name = f"{name_info['model_name']}_{name_info['sample_size']}_{name_info['random_state']}_{file_name}"
+    name = f"{name_info['model_name']}_{name_info['sample_size']}_{file_name}.pkl"
     return os.path.join(path, name)
 
 
@@ -63,9 +69,10 @@ def load_direct_result(name_info: NameInfo) -> pandas.DataFrame:
     return pandas.read_pickle(path)
 
 
-def save_fine_tuning_data(data):
-    path = get_result_dir_path()
-    path = os.path.join(path, FINE_TUNING_DATA_FILE_NAME)
+def save_fine_tuning_data(data, with_sf: bool):
+    path = get_data_dir_path()
+    with_sf = "with_sf" if with_sf else "without_sf"
+    path = os.path.join(path, f"{FINE_TUNING_DATA_FILE_NAME}_{with_sf}.jsonl")
     # to jsonl
     with open(path, 'w') as outfile:
         for entry in data:
@@ -80,7 +87,6 @@ class TestPersistent(unittest.TestCase):
         name_info: NameInfo = {
             "model_name": "test_model",
             "sample_size": 100,
-            "random_state": 42,
         }
         path = _get_result_file_path(name_info, NL2SF_FILE_NAME)
         print(path)
