@@ -2,6 +2,7 @@ import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
 from sklearn.metrics import accuracy_score, roc_auc_score, f1_score, recall_score
+from sklearn.preprocessing import OneHotEncoder
 
 
 def execution_metrics(df: pd.DataFrame) -> pd.DataFrame:
@@ -9,24 +10,16 @@ def execution_metrics(df: pd.DataFrame) -> pd.DataFrame:
     Calculate the metrics:
     1. Execution rate: whether the predicted symbolic formulation can be executed or not
     2. Execution accuracy: predicted labels match truth labels
-    3. AUC: Area under the ROC curve
     """
 
     # execution_rate
     er = len(df[df['predicted_label'] != -1]) / len(df)
 
-    # drop rows with predicted_label = -1
-    # df = df[df['predicted_label'] != -1]
-
     # accuracy_rate
     accuracy = accuracy_score(df['target_label'], df['predicted_label'])
 
-    # auc
-    auc = roc_auc_score(df['target_label'], df['predicted_label'])
-
     m = {
         'execution_accuracy': [accuracy],
-        'auc': [auc],
         'execution_rate': [er],
     }
     mdf = pd.DataFrame(m)
