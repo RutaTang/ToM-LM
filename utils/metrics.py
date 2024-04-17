@@ -18,8 +18,29 @@ def execution_metrics(df: pd.DataFrame) -> pd.DataFrame:
     # accuracy_rate
     accuracy = accuracy_score(df['target_label'], df['predicted_label'])
 
+    # f1_score
+    f1 = f1_score(df['target_label'], df['predicted_label'], average='weighted')
+
+    # auc
+    def encode_label(x):
+        fail_label = [0, 0]
+        true_label = [1, 0]
+        false_label = [0, 1]
+        if x == 1:
+            return true_label
+        elif x == 0:
+            return false_label
+        else:
+            return fail_label
+
+    target = df['target_label'].apply(encode_label)
+    predicted = df['predicted_label'].apply(encode_label)
+    auc = roc_auc_score(target.to_list(), predicted.to_list(), multi_class='ovr', average='weighted')
+
     m = {
         'execution_accuracy': [accuracy],
+        'f1': [f1],
+        'auc': [auc],
         'execution_rate': [er],
     }
     mdf = pd.DataFrame(m)
@@ -58,13 +79,18 @@ def results_distribution(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def plot_results_distribution(df: pd.DataFrame):
-    df = df.rename(columns={1: 'True', 0: 'False', -1: 'No Idea'})
+    # rename columns
+    df.rename_axis("Output", axis=1, inplace=True)
+    df = df.rename(columns={1: "TRUE", 0: "FALSE", -1: "I DON'T KNOW"})
+    # change to percentage
+    df = df * 100
+    # plot
     palette = lambda n: sns.color_palette('rocket', n)
     fig, ax = plt.subplots(figsize=(16, 5))
     bars = df.plot(use_index=True, y=list(df.columns), kind='bar', ax=ax, color=palette(len(df.columns)))
-    ax.set_ylim(0, 1.2)
+    ax.set_ylim(0, 100)
     plt.xticks(rotation=0)
-    plt.title("Results Distribution")
+    plt.title("Output Distribution")
     plt.xlabel("Approaches")
     plt.ylabel("Percentage")
     for bar in bars.patches:
