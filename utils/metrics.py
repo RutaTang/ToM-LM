@@ -90,13 +90,17 @@ def plot_results_distribution(df: pd.DataFrame):
     bars = df.plot(use_index=True, y=list(df.columns), kind='bar', ax=ax, color=palette(len(df.columns)))
     ax.set_ylim(0, 100)
     plt.xticks(rotation=0)
-    plt.title("Output Distribution")
+    plt.title("Output Distributions",fontsize=20)
     plt.xlabel("Approaches")
     plt.ylabel("Percentage")
+    ax.yaxis.label.set(fontsize=18)
+    ax.xaxis.label.set(fontsize=18)
+    ax.tick_params(axis='x', labelsize=16)
+    ax.tick_params(axis='y', labelsize=16)
     for bar in bars.patches:
         bars.annotate(format(bar.get_height(), '.2f'),
                       (bar.get_x() + bar.get_width() / 2,
                        bar.get_height()), ha='center', va='center',
-                      size=10, xytext=(0, 8),
+                      size=12, xytext=(0, 8),
                       textcoords='offset points')
     plt.show()
